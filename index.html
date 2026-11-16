@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LofiDesk — Cozy Student Study Room</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #1b2432 0%, #2c3e50 50%, #1a1f2c 100%);
+      --window-sky: linear-gradient(180deg, #0f172a 0%, #1e293b 60%, #334155 100%);
+      --panel-bg: rgba(20, 26, 38, 0.72);
+      --accent: #f59e0b;
+      --accent-soft: rgba(245, 158, 11, 0.2);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --desk-color: #4a3222;
+      --desk-top: #634430;
+    }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.8s ease;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .glass-panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    /* Custom Range Sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      background: rgba(255, 255, 255, 0.15);
+      height: 6px;
+      border-radius: 999px;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+      transition: transform 0.15s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* Cozy Steam Animation */
+    @keyframes riseSteam {
+      0% { transform: translateY(0) scale(0.8); opacity: 0; }
+      40% { opacity: 0.75; }
+      100% { transform: translateY(-38px) scale(1.35) translateX(6px); opacity: 0; }
+    }
+    .steam-puff {
+      animation: riseSteam 3.2s infinite ease-in-out;
+    }
+    .steam-puff:nth-child(2) { animation-delay: 1.1s; }
+    .steam-puff:nth-child(3) { animation-delay: 2.2s; }
+
+    /* Cat Animations */
+    @keyframes tailWag {
+      0%, 100% { transform: rotate(-8deg); }
+      50% { transform: rotate(14deg); }
+    }
+    .cat-tail {
+      transform-origin: 18px 85px;
+      animation: tailWag 3.5s infinite ease-in-out;
+    }
+
+    @keyframes catBlink {
+      0%, 92%, 100% { transform: scaleY(1); }
+      95% { transform: scaleY(0.1); }
+    }
+    .cat-eye {
+      transform-origin: center;
+      animation: catBlink 5s infinite;
+    }
+
+    @keyframes floatHeart {
+      0% { transform: translateY(0) scale(0.6); opacity: 1; }
+      100% { transform: translateY(-45px) scale(1.2); opacity: 0; }
+    }
+    .floating-heart {
+      position: absolute;
+      animation: floatHeart 1.4s forwards ease-out;
+      pointer-events: none;
+    }
+
+    /* Zen Mode */
+    body.zen-active .ui-dashboard {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(16px);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 999px; }
+  </style>
+</head>
+<body class="relative select-none">
+
+  <!-- Full-Screen Cozy Room Background & Window Scene -->
+  <div id="room-scene" class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <!-- Subtle Ambient Room Glow -->
+    <div id="ambient-glow" class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] rounded-full blur-3xl opacity-30" style="background: radial-gradient(circle, #f59e0b 0%, transparent 70%);"></div>
+
+    <!-- Cozy Window Frame -->
+    <div class="absolute top-8 left-1/2 -translate-x-1/2 w-[92%] max-w-4xl h-[62vh] rounded-3xl border-[12px] border-[#2c1e16] shadow-2xl overflow-hidden" style="background: var(--window-sky);">
+      <!-- Moon & Twinkling Stars -->
+      <div class="absolute top-8 right-12 w-14 h-14 rounded-full bg-amber-100/90 shadow-[0_0_35px_rgba(254,243,199,0.7)]"></div>
+      <div class="absolute top-12 left-16 w-1.5 h-1.5 bg-white rounded-full opacity-75 animate-pulse"></div>
+      <div class="absolute top-24 left-1/3 w-1 h-1 bg-white rounded-full opacity-60"></div>
+      <div class="absolute top-10 left-1/2 w-1.5 h-1.5 bg-amber-200 rounded-full opacity-80 animate-pulse"></div>
+      <div class="absolute top-28 right-1/3 w-1 h-1 bg-white rounded-full opacity-70"></div>
+
+      <!-- Distant Snowy Hills / Pine Silhouettes -->
+      <svg class="absolute bottom-0 left-0 w-full h-36 opacity-85" viewBox="0 0 800 150" preserveAspectRatio="none">
+        <path d="M0,150 L0,95 Q160,55 340,100 T680,85 L800,95 L800,150 Z" fill="#1e293b"/>
+        <path d="M0,150 L0,115 Q240,80 480,115 T800,105 L800,150 Z" fill="#334155"/>
+        <!-- Pine Trees -->
+        <polygon points="90,110 105,65 120,110" fill="#0f172a"/>
+        <polygon points="115,115 132,60 150,115" fill="#0f172a"/>
+        <polygon points="650,108 668,58 685,108" fill="#0f172a"/>
+        <polygon points="680,112 695,70 710,112" fill="#0f172a"/>
+      </svg>
+
+      <!-- Weather Canvas (Falling Snow & Window Rain) -->
+      <canvas id="weather-canvas" class="absolute inset-0 w-full h-full"></canvas>
+
+      <!-- Window Panes Crossbars -->
+      <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-3 bg-[#2c1e16]/90"></div>
+      <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-3 bg-[#2c1e16]/90"></div>
+
+      <!-- String Fairy Lights across top of window -->
+      <svg class="absolute top-0 left-0 w-full h-16" viewBox="0 0 800 60" preserveAspectRatio="none">
+        <path d="M0,5 Q200,45 400,10 Q600,45 800,5" fill="none" stroke="#1c1917" stroke-width="2"/>
+        <circle cx="80" cy="21" r="4" fill="#fde047" class="animate-pulse"/>
+        <circle cx="160" cy="28" r="4" fill="#fb923c"/>
+        <circle cx="240" cy="26" r="4" fill="#fde047" class="animate-pulse"/>
+        <circle cx="320" cy="17" r="4" fill="#fef08a"/>
+        <circle cx="480" cy="18" r="4" fill="#fde047" class="animate-pulse"/>
+        <circle cx="560" cy="27" r="4" fill="#fb923c"/>
+        <circle cx="640" cy="26" r="4" fill="#fde047" class="animate-pulse"/>
+        <circle cx="720" cy="18" r="4" fill="#fef08a"/>
+      </svg>
+    </div>
+
+    <!-- Wooden Study Desk Foreground -->
+    <div class="absolute bottom-0 inset-x-0 h-[32vh] border-t-8 border-[#7c563d]" style="background: linear-gradient(180deg, var(--desk-top) 0%, var(--desk-color) 100%);">
+      <!-- Desk Props Container (Interactive) -->
+      <div class="relative max-w-4xl mx-auto h-full pointer-events-auto">
+
+        <!-- Interactive Hot Chocolate Mug with Marshmallows -->
+        <div id="hot-cocoa-prop" onclick="sipCocoa()" title="Click to take a warm sip!" class="absolute -top-16 left-8 sm:left-16 cursor-pointer group transition-transform hover:scale-105">
+          <!-- Rising Steam -->
+          <div id="steam-container" class="flex justify-center gap-2 mb-1 h-8">
+            <div class="steam-puff w-2 h-5 rounded-full bg-white/40 blur-[2px]"></div>
+            <div class="steam-puff w-2.5 h-6 rounded-full bg-white/50 blur-[2px]"></div>
+            <div class="steam-puff w-2 h-5 rounded-full bg-white/40 blur-[2px]"></div>
+          </div>
+          <!-- Mug SVG -->
+          <svg width="76" height="68" viewBox="0 0 80 72">
+            <!-- Handle -->
+            <path d="M58,24 C74,24 74,52 58,52" fill="none" stroke="#e11d48" stroke-width="7" stroke-linecap="round"/>
+            <!-- Mug Body -->
+            <rect x="14" y="16" width="46" height="46" rx="10" fill="#f43f5e"/>
+            <rect x="14" y="16" width="46" height="10" rx="5" fill="#fda4af"/>
+            <!-- Hot Cocoa & Mini Marshmallows -->
+            <ellipse cx="37" cy="21" rx="19" ry="4" fill="#451a03"/>
+            <rect x="26" y="18" width="7" height="5" rx="2" fill="#fffbeb"/>
+            <rect x="36" y="17" width="7" height="5" rx="2" fill="#ffffff"/>
+            <rect x="44" y="19" width="6" height="4" rx="2" fill="#fffbeb"/>
+            <!-- Cozy Heart on Mug -->
+            <path d="M37,46 C37,46 27,39 27,33 C27,30 30,28 33,28 C35,28 37,30 37,30 C37,30 39,28 41,28 C44,28 47,30 47,33 C47,39 37,46 37,46 Z" fill="#ffe4e6"/>
+          </svg>
+          <span id="cocoa-toast" class="opacity-0 group-hover:opacity-100 transition-opacity absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs bg-black/70 px-2 py-0.5 rounded-full text-amber-200">Sip Cocoa ☕</span>
+        </div>
+
+        <!-- Interactive Cozy Cat Companion -->
+        <div id="cat-prop" onclick="petCat()" title="Click to pet the cat!" class="absolute -top-24 right-8 sm:right-16 cursor-pointer group transition-transform hover:scale-105">
+          <div id="cat-hearts" class="relative w-full h-0"></div>
+          <svg id="cat-svg" width="110" height="105" viewBox="0 0 110 105">
+            <!-- Wagging Tail -->
+            <path class="cat-tail" d="M22,85 Q2,70 10,48 Q14,40 20,46 Q15,65 28,80" fill="#f97316" id="cat-tail-path"/>
+            <!-- Cat Body -->
+            <ellipse cx="55" cy="76" rx="28" ry="22" fill="#f97316" id="cat-body"/>
+            <!-- Cat Head -->
+            <circle cx="55" cy="44" r="21" fill="#f97316" id="cat-head"/>
+            <!-- Ears -->
+            <polygon points="36,32 34,12 50,25" fill="#f97316" id="cat-ear-l"/>
+            <polygon points="74,32 76,12 60,25" fill="#f97316" id="cat-ear-r"/>
+            <polygon points="39,29 38,17 47,25" fill="#fed7aa"/>
+            <polygon points="71,29 72,17 63,25" fill="#fed7aa"/>
+            <!-- Calico / Tuxedo Markings (toggled via JS) -->
+            <circle cx="44" cy="36" r="8" fill="#1e293b" opacity="0" id="cat-patch-1"/>
+            <ellipse cx="55" cy="78" rx="14" ry="14" fill="#ffffff" opacity="0" id="cat-belly"/>
+            <!-- Eyes -->
+            <ellipse class="cat-eye" cx="47" cy="43" rx="2.8" ry="3.5" fill="#1e293b" id="cat-eye-l"/>
+            <ellipse class="cat-eye" cx="63" cy="43" rx="2.8" ry="3.5" fill="#1e293b" id="cat-eye-r"/>
+            <!-- Blush & Nose -->
+            <ellipse cx="41" cy="48" rx="3" ry="1.8" fill="#fb7185" opacity="0.6"/>
+            <ellipse cx="69" cy="48" rx="3" ry="1.8" fill="#fb7185" opacity="0.6"/>
+            <polygon points="53,47 57,47 55,50" fill="#fb7185"/>
+            <path d="M51,51 Q55,54 55,50 Q55,54 59,51" fill="none" stroke="#1e293b" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- Paws -->
+            <ellipse cx="43" cy="94" rx="7" ry="4.5" fill="#fff7ed" id="cat-paw-l"/>
+            <ellipse cx="67" cy="94" rx="7" ry="4.5" fill="#fff7ed" id="cat-paw-r"/>
+          </svg>
+          <span class="opacity-0 group-hover:opacity-100 transition-opacity absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs bg-black/70 px-2 py-0.5 rounded-full text-amber-200">Pet Cat 🐾</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Room Customizer & Zen Bar (Always accessible) -->
+  <header class="relative z-20 max-w-6xl mx-auto px-4 pt-4 flex flex-wrap items-center justify-between gap-3">
+    <div class="glass-panel px-4 py-2 rounded-2xl flex items-center gap-3">
+      <span class="text-2xl">🕯️</span>
+      <div>
+        <h1 class="text-lg font-bold tracking-wide leading-none text-amber-300">LofiDesk</h1>
+        <p class="text-[11px] text-slate-300">Cozy Student Study Room</p>
+      </div>
+    </div>
+
+    <!-- Scene & Companion Controls -->
+    <div class="glass-panel px-3 py-2 rounded-2xl flex flex-wrap items-center gap-2 text-xs font-semibold">
+      <button onclick="toggleProp('snow')" id="btn-snow" class="px-3 py-1.5 rounded-xl bg-amber-500/25 text-amber-200 border border-amber-400/40 transition hover:bg-amber-500/40">❄️ Snow: ON</button>
+      <button onclick="toggleProp('rain')" id="btn-rain" class="px-3 py-1.5 rounded-xl bg-white/5 text-slate-300 border border-white/10 transition hover:bg-white/15">🌧️ Rain: OFF</button>
+      <button onclick="toggleProp('cocoa')" id="btn-cocoa" class="px-3 py-1.5 rounded-xl bg-amber-500/25 text-amber-200 border border-amber-400/40 transition hover:bg-amber-500/40">☕ Cocoa: ON</button>
+      <button onclick="toggleProp('cat')" id="btn-cat" class="px-3 py-1.5 rounded-xl bg-amber-500/25 text-amber-200 border border-amber-400/40 transition hover:bg-amber-500/40">🐱 Cat: ON</button>
+      <button onclick="cycleCatBreed()" id="btn-breed" class="px-3 py-1.5 rounded-xl bg-white/10 text-amber-100 hover:bg-white/20 transition" title="Change Cat Coat">🎨 Orange Tabby</button>
+      <select onchange="changeTheme(this.value)" class="bg-slate-900/80 text-slate-200 border border-white/15 rounded-xl px-2.5 py-1.5 outline-none cursor-pointer">
+        <option value="winter">🏔️ Snowy Cabin Night</option>
+        <option value="cafe">☕ Rainy Lo-Fi Cafe</option>
+        <option value="matcha">🌿 Matcha Greenhouse</option>
+        <option value="sunset">🌇 Sunset Dorm</option>
+      </select>
+    </div>
+
+    <!-- Zen View Toggle -->
+    <button onclick="toggleZenMode()" id="btn-zen" class="glass-panel px-4 py-2 rounded-2xl text-xs font-bold text-amber-200 hover:bg-amber-500/20 transition flex items-center gap-1.5">
+      <span>👁️</span> <span id="zen-label">Zen View</span>
+    </button>
+  </header>
+
+  <!-- Main Study Dashboard Grid -->
+  <main class="ui-dashboard relative z-10 max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+    <!-- Left Column: Pomodoro Timer & Homework Checklist (5 cols) -->
+    <div class="lg:col-span-5 flex flex-col gap-5">
+
+      <!-- Pomodoro Focus Timer -->
+      <section class="glass-panel rounded-3xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-lg font-bold text-amber-300 flex items-center gap-2">⏱️ Focus Timer</h2>
+          <span id="session-counter" class="text-xs bg-white/10 px-2.5 py-1 rounded-full text-slate-300">Sessions: 0</span>
+        </div>
+
+        <!-- Mode Tabs -->
+        <div class="grid grid-cols-3 gap-1.5 bg-black/30 p-1 rounded-xl mb-4 text-xs font-semibold">
+          <button onclick="setTimerMode(25, 'Focus')" id="mode-focus" class="py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold transition">Focus 25m</button>
+          <button onclick="setTimerMode(5, 'Short Break')" id="mode-short" class="py-1.5 rounded-lg text-slate-300 hover:bg-white/10 transition">Short 5m</button>
+          <button onclick="setTimerMode(15, 'Long Break')" id="mode-long" class="py-1.5 rounded-lg text-slate-300 hover:bg-white/10 transition">Long 15m</button>
+        </div>
+
+        <!-- Timer Display -->
+        <div class="text-center my-3">
+          <div id="timer-display" class="font-display text-6xl font-bold tracking-wider text-white drop-shadow">25:00</div>
+          <p id="timer-status" class="text-xs text-amber-200/80 mt-1">Ready to study cozy</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full h-2 bg-black/40 rounded-full overflow-hidden mb-4">
+          <div id="timer-progress" class="h-full bg-amber-400 transition-all duration-500" style="width: 100%;"></div>
+        </div>
+
+        <!-- Timer Controls -->
+        <div class="flex gap-2">
+          <button onclick="toggleTimer()" id="timer-start-btn" class="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition shadow-lg">Start Focus</button>
+          <button onclick="resetTimer()" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 font-semibold text-sm transition">Reset</button>
+        </div>
+      </section>
+
+      <!-- Homework & Assignment Checklist -->
+      <section class="glass-panel rounded-3xl p-5 flex-1 flex flex-col">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-lg font-bold text-amber-300 flex items-center gap-2">📚 Study Checklist</h2>
+          <span id="task-count" class="text-xs text-slate-300">0/0 done</span>
+        </div>
+
+        <form onsubmit="addTask(event)" class="flex gap-2 mb-3">
+          <select id="task-subject" class="bg-black/40 border border-white/15 rounded-xl px-2 py-2 text-xs text-amber-200 outline-none">
+            <option value="Math">📐 Math</option>
+            <option value="Science">🧪 Science</option>
+            <option value="English">📖 English</option>
+            <option value="History">🏛️ History</option>
+            <option value="CS">💻 CS</option>
+            <option value="General">✨ General</option>
+          </select>
+          <input id="task-input" type="text" placeholder="Add homework or study goal..." class="flex-1 bg-black/40 border border-white/15 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 outline-none focus:border-amber-400" required />
+          <button type="submit" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition">+</button>
+        </form>
+
+        <ul id="task-list" class="space-y-2 max-h-56 overflow-y-auto pr-1 text-xs"></ul>
+      </section>
+    </div>
+
+    <!-- Right Column: 7-Channel Ambient Sound Mixer & Group Project Splitter (7 cols) -->
+    <div class="lg:col-span-7 flex flex-col gap-5">
+
+      <!-- 7-Channel Web Audio Soundscape Mixer -->
+      <section class="glass-panel rounded-3xl p-5">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <div>
+            <h2 class="text-lg font-bold text-amber-300 flex items-center gap-2">🎧 Cozy Soundscape Mixer</h2>
+            <p class="text-xs text-slate-300">Real-time synthesized audio — mix your ideal study vibe</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="applyCozyPreset()" class="px-3 py-1.5 rounded-xl bg-amber-500/25 hover:bg-amber-500/40 border border-amber-400/40 text-amber-200 text-xs font-bold transition">✨ Cozy Winter Mix</button>
+            <button onclick="muteAllSounds()" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-semibold transition">🔇 Mute All</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="sound-sliders">
+          <!-- Sliders injected by JS -->
+        </div>
+      </section>
+
+      <!-- Group Project Task Splitter -->
+      <section class="glass-panel rounded-3xl p-5 flex-1">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h2 class="text-lg font-bold text-amber-300 flex items-center gap-2">🤝 Group Project Splitter</h2>
+            <p class="text-xs text-slate-300">Fairly divide deliverables & auto-generate mini-deadlines</p>
+          </div>
+          <button onclick="copyProjectPlan()" id="copy-plan-btn" class="hidden px-3 py-1.5 rounded-xl bg-emerald-500/25 border border-emerald-400/40 text-emerald-200 text-xs font-bold hover:bg-emerald-500/40 transition">📋 Copy for Group Chat</button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 text-xs">
+          <div>
+            <label class="block text-slate-300 mb-1">Project Name</label>
+            <input id="proj-name" type="text" placeholder="e.g., AP Bio Ecosystem Slides" class="w-full bg-black/40 border border-white/15 rounded-xl px-3 py-2 text-white outline-none focus:border-amber-400">
+          </div>
+          <div>
+            <label class="block text-slate-300 mb-1">Final Due Date</label>
+            <input id="proj-due" type="date" class="w-full bg-black/40 border border-white/15 rounded-xl px-3 py-2 text-white outline-none focus:border-amber-400">
+          </div>
+          <div>
+            <label class="block text-slate-300 mb-1">Team Members (comma-separated)</label>
+            <input id="proj-members" type="text" placeholder="Alex, Maya, Jordan" class="w-full bg-black/40 border border-white/15 rounded-xl px-3 py-2 text-white outline-none focus:border-amber-400">
+          </div>
+          <div>
+            <label class="block text-slate-300 mb-1">Tasks / Slides (comma-separated)</label>
+            <input id="proj-tasks" type="text" placeholder="Intro, Research, Data Chart, Design, Script" class="w-full bg-black/40 border border-white/15 rounded-xl px-3 py-2 text-white outline-none focus:border-amber-400">
+          </div>
+        </div>
+
+        <button onclick="splitGroupProject()" class="w-full py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition mb-3">Split Workload Fairly</button>
+
+        <div id="project-output" class="space-y-2 max-h-44 overflow-y-auto text-xs"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    /* =========================================
+       1. ROOM THEMES, WEATHER CANVAS & PROPS
+       ========================================= */
+    const themes = {
+      winter: {
+        bg: 'linear-gradient(135deg, #162032 0%, #24344d 50%, #141a26 100%)',
+        sky: 'linear-gradient(180deg, #090d16 0%, #17233b 65%, #283a59 100%)',
+        deskTop: '#634430',
+        deskColor: '#422b1d',
+        accent: '#f59e0b'
+      },
+      cafe: {
+        bg: 'linear-gradient(135deg, #271c19 0%, #3e2b26 50%, #1f1614 100%)',
+        sky: 'linear-gradient(180deg, #1c1917 0%, #292524 65%, #44403c 100%)',
+        deskTop: '#784b32',
+        deskColor: '#4f301f',
+        accent: '#fb923c'
+      },
+      matcha: {
+        bg: 'linear-gradient(135deg, #16261e 0%, #243b2f 50%, #121f18 100%)',
+        sky: 'linear-gradient(180deg, #0f241d 0%, #1b3b30 65%, #2d5a4a 100%)',
+        deskTop: '#6b533b',
+        deskColor: '#4a3827',
+        accent: '#4ade80'
+      },
+      sunset: {
+        bg: 'linear-gradient(135deg, #2b192e 0%, #4a2545 50%, #1f1224 100%)',
+        sky: 'linear-gradient(180deg, #1e1b4b 0%, #701a75 55%, #ea580c 100%)',
+        deskTop: '#6e453a',
+        deskColor: '#4a2c24',
+        accent: '#f472b6'
+      }
+    };
+
+    function changeTheme(key) {
+      const t = themes[key];
+      document.documentElement.style.setProperty('--bg-gradient', t.bg);
+      document.documentElement.style.setProperty('--window-sky', t.sky);
+      document.documentElement.style.setProperty('--desk-top', t.deskTop);
+      document.documentElement.style.setProperty('--desk-color', t.deskColor);
+      document.documentElement.style.setProperty('--accent', t.accent);
+    }
+
+    const propState = { snow: true, rain: false, cocoa: true, cat: true };
+
+    function toggleProp(prop) {
+      propState[prop] = !propState[prop];
+      const btn = document.getElementById(`btn-${prop}`);
+      const labels = { snow: '❄️ Snow', rain: '🌧️ Rain', cocoa: '☕ Cocoa', cat: '🐱 Cat' };
+      btn.textContent = `${labels[prop]}: ${propState[prop] ? 'ON' : 'OFF'}`;
+      btn.className = propState[prop]
+        ? 'px-3 py-1.5 rounded-xl bg-amber-500/25 text-amber-200 border border-amber-400/40 transition hover:bg-amber-500/40'
+        : 'px-3 py-1.5 rounded-xl bg-white/5 text-slate-300 border border-white/10 transition hover:bg-white/15';
+
+      if (prop === 'cocoa') {
+        document.getElementById('hot-cocoa-prop').style.display = propState.cocoa ? 'block' : 'none';
+      }
+      if (prop === 'cat') {
+        document.getElementById('cat-prop').style.display = propState.cat ? 'block' : 'none';
+      }
+    }
+
+    // Cat Coat Switcher
+    const catBreeds = [
+      { name: 'Orange Tabby', main: '#f97316', belly: '#fed7aa', patch: 0, bellyOp: 0, paws: '#fff7ed' },
+      { name: 'Calico', main: '#fffbeb', belly: '#ffffff', patch: 1, bellyOp: 0, paws: '#f97316' },
+      { name: 'Tuxedo', main: '#1e293b', belly: '#ffffff', patch: 0, bellyOp: 1, paws: '#ffffff' },
+      { name: 'Midnight Black', main: '#18181b', belly: '#27272a', patch: 0, bellyOp: 0, paws: '#18181b' }
+    ];
+    let currentBreed = 0;
+
+    function cycleCatBreed() {
+      currentBreed = (currentBreed + 1) % catBreeds.length;
+      const b = catBreeds[currentBreed];
+      document.getElementById('btn-breed').textContent = `🎨 ${b.name}`;
+      ['cat-tail-path', 'cat-body', 'cat-head', 'cat-ear-l', 'cat-ear-r'].forEach(id => {
+        document.getElementById(id).setAttribute('fill', b.main);
+      });
+      document.getElementById('cat-patch-1').setAttribute('opacity', b.patch);
+      document.getElementById('cat-belly').setAttribute('opacity', b.bellyOp);
+      document.getElementById('cat-paw-l').setAttribute('fill', b.paws);
+      document.getElementById('cat-paw-r').setAttribute('fill', b.paws);
+    }
+
+    function petCat() {
+      const container = document.getElementById('cat-hearts');
+      const heart = document.createElement('span');
+      heart.textContent = '💖';
+      heart.className = 'floating-heart text-lg';
+      heart.style.left = `${35 + Math.random() * 30}px`;
+      container.appendChild(heart);
+      setTimeout(() => heart.remove(), 1400);
+      playPurrBurst();
+    }
+
+    function sipCocoa() {
+      const toast = document.getElementById('cocoa-toast');
+      toast.textContent = 'Mmm, warm marshmallows! ✨';
+      toast.style.opacity = '1';
+      setTimeout(() => {
+        toast.style.opacity = '';
+        toast.textContent = 'Sip Cocoa ☕';
+      }, 1800);
+    }
+
+    let zenMode = false;
+    function toggleZenMode() {
+      zenMode = !zenMode;
+      document.body.classList.toggle('zen-active', zenMode);
+      document.getElementById('zen-label').textContent = zenMode ? 'Show Desk' : 'Zen View';
+    }
+
+    // Weather Particle Animation (Snow & Rain)
+    const canvas = document.getElementById('weather-canvas');
+    const ctx = canvas.getContext('2d');
+    let snowflakes = [];
+    let raindrops = [];
+
+    function resizeWeather() {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+    window.addEventListener('resize', resizeWeather);
+    resizeWeather();
+
+    for (let i = 0; i < 75; i++) {
+      snowflakes.push({
+        x: Math.random() * 900,
+        y: Math.random() * 500,
+        r: Math.random() * 3 + 1.2,
+        speedY: Math.random() * 1.1 + 0.4,
+        drift: Math.random() * 0.6 - 0.3
+      });
+    }
+    for (let i = 0; i < 90; i++) {
+      raindrops.push({
+        x: Math.random() * 900,
+        y: Math.random() * 500,
+        len: Math.random() * 14 + 10,
+        speedY: Math.random() * 7 + 6
+      });
+    }
+
+    function animateWeather() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (propState.snow) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+        snowflakes.forEach(s => {
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fill();
+          s.y += s.speedY;
+          s.x += s.drift + Math.sin(s.y * 0.02) * 0.3;
+          if (s.y > canvas.height) { s.y = -5; s.x = Math.random() * canvas.width; }
+        });
+      }
+
+      if (propState.rain) {
+        ctx.strokeStyle = 'rgba(186, 230, 253, 0.45)';
+        ctx.lineWidth = 1.3;
+        raindrops.forEach(r => {
+          ctx.beginPath();
+          ctx.moveTo(r.x, r.y);
+          ctx.lineTo(r.x - 2, r.y + r.len);
+          ctx.stroke();
+          r.y += r.speedY;
+          r.x -= 1.2;
+          if (r.y > canvas.height) { r.y = -15; r.x = Math.random() * canvas.width; }
+        });
+      }
+
+      requestAnimationFrame(animateWeather);
+    }
+    animateWeather();
+
+    /* =========================================
+       2. WEB AUDIO API 7-CHANNEL SOUNDSCAPE MIXER
+       ========================================= */
+    let audioCtx = null;
+    const soundChannels = [
+      { id: 'rain', label: '🌧️ Soft Window Rain', vol: 0 },
+      { id: 'fire', label: '🔥 Fireplace Crackle', vol: 0 },
+      { id: 'purr', label: '🐱 Cozy Cat Purr', vol: 0 },
+      { id: 'wind', label: '❄️ Winter Night Wind', vol: 0 },
+      { id: 'cafe', label: '☕ Cafe Murmur', vol: 0 },
+      { id: 'lofi', label: '🎹 Warm Lo-Fi Chords', vol: 0 },
+      { id: 'thunder', label: '⛈️ Distant Thunder', vol: 0 }
+    ];
+    const activeNodes = {};
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function createNoiseBuffer(type) {
+      const bufferSize = audioCtx.sampleRate * 3;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      let lastOut = 0;
+
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        if (type === 'pink') {
+          data[i] = (lastOut + 0.04 * white) / 1.04;
+          lastOut = data[i];
+          data[i] *= 2.5;
+        } else if (type === 'brown') {
+          data[i] = (lastOut + 0.02 * white) / 1.02;
+          lastOut = data[i];
+          data[i] *= 3.5;
+        } else if (type === 'crackle') {
+          data[i] = Math.random() > 0.996 ? (Math.random() * 2 - 1) * 0.9 : white * 0.015;
+        } else {
+          data[i] = white;
+        }
+      }
+      return buffer;
+    }
+
+    function setupChannel(id) {
+      if (activeNodes[id]) return activeNodes[id];
+      initAudio();
+      const gain = audioCtx.createGain();
+      gain.gain.value = 0;
+      gain.connect(audioCtx.destination);
+
+      if (id === 'rain') {
+        const src = audioCtx.createBufferSource();
+        src.buffer = createNoiseBuffer('pink');
+        src.loop = true;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 1100;
+        src.connect(filter);
+        filter.connect(gain);
+        src.start();
+      } else if (id === 'fire') {
+        const src = audioCtx.createBufferSource();
+        src.buffer = createNoiseBuffer('crackle');
+        src.loop = true;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 1800;
+        src.connect(filter);
+        filter.connect(gain);
+        src.start();
+      } else if (id === 'purr') {
+        const osc = audioCtx.createOscillator();
+        osc.type = 'sawtooth';
+        osc.frequency.value = 27;
+        const lfo = audioCtx.createOscillator();
+        lfo.frequency.value = 2.2;
+        const lfoGain = audioCtx.createGain();
+        lfoGain.gain.value = 0.4;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 140;
+        osc.connect(filter);
+        filter.connect(gain);
+        osc.start();
+      } else if (id === 'wind') {
+        const src = audioCtx.createBufferSource();
+        src.buffer = createNoiseBuffer('pink');
+        src.loop = true;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 380;
+        filter.Q.value = 4;
+        src.connect(filter);
+        filter.connect(gain);
+        src.start();
+      } else if (id === 'cafe') {
+        const src = audioCtx.createBufferSource();
+        src.buffer = createNoiseBuffer('brown');
+        src.loop = true;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 650;
+        src.connect(filter);
+        filter.connect(gain);
+        src.start();
+      } else if (id === 'thunder') {
+        const src = audioCtx.createBufferSource();
+        src.buffer = createNoiseBuffer('brown');
+        src.loop = true;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 120;
+        src.connect(filter);
+        filter.connect(gain);
+        src.start();
+      } else if (id === 'lofi') {
+        // Warm Fmaj7 -> Em7 ambient pad loop
+        const chords = [
+          [174.61, 220.00, 261.63, 329.63],
+          [164.81, 196.00, 246.94, 293.66]
+        ];
+        let step = 0;
+        const subGain = audioCtx.createGain();
+        subGain.gain.value = 0.12;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 600;
+        subGain.connect(filter);
+        filter.connect(gain);
+
+        const oscs = chords[0].map(freq => {
+          const o = audioCtx.createOscillator();
+          o.type = 'triangle';
+          o.frequency.value = freq;
+          o.connect(subGain);
+          o.start();
+          return o;
+        });
+
+        setInterval(() => {
+          step = (step + 1) % chords.length;
+          oscs.forEach((o, idx) => {
+            o.frequency.setTargetAtTime(chords[step][idx], audioCtx.currentTime, 0.4);
+          });
+        }, 4000);
+      }
+
+      activeNodes[id] = gain;
+      return gain;
+    }
+
+    function setSoundVolume(id, val) {
+      const gain = setupChannel(id);
+      gain.gain.setTargetAtTime(val / 100 * 0.45, audioCtx.currentTime, 0.08);
+      const ch = soundChannels.find(c => c.id === id);
+      if (ch) ch.vol = val;
+      document.getElementById(`vol-label-${id}`).textContent = `${val}%`;
+    }
+
+    function playPurrBurst() {
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(32, audioCtx.currentTime);
+      g.gain.setValueAtTime(0.18, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.9);
+      osc.connect(g);
+      g.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.9);
+    }
+
+    function renderSliders() {
+      const container = document.getElementById('sound-sliders');
+      container.innerHTML = soundChannels.map(ch => `
+        <div class="bg-black/30 border border-white/10 rounded-2xl px-3.5 py-2.5 flex flex-col gap-1.5">
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-semibold text-slate-200">${ch.label}</span>
+            <span id="vol-label-${ch.id}" class="text-amber-300 font-bold">${ch.vol}%</span>
+          </div>
+          <input id="slider-${ch.id}" type="range" min="0" max="100" value="${ch.vol}" oninput="setSoundVolume('${ch.id}', this.value)">
+        </div>
+      `).join('');
+    }
+    renderSliders();
+
+    function applyCozyPreset() {
+      const preset = { fire: 55, purr: 45, wind: 30, lofi: 40, rain: 0, cafe: 0, thunder: 0 };
+      Object.entries(preset).forEach(([id, val]) => {
+        document.getElementById(`slider-${id}`).value = val;
+        setSoundVolume(id, val);
+      });
+    }
+
+    function muteAllSounds() {
+      soundChannels.forEach(ch => {
+        document.getElementById(`slider-${ch.id}`).value = 0;
+        setSoundVolume(ch.id, 0);
+      });
+    }
+
+    /* =========================================
+       3. POMODORO FOCUS TIMER
+       ========================================= */
+    let totalSeconds = 25 * 60;
+    let remainingSeconds = totalSeconds;
+    let timerInterval = null;
+    let currentModeName = 'Focus';
+    let completedSessions = 0;
+
+    function updateTimerUI() {
+      const mins = Math.floor(remainingSeconds / 60).toString().padStart(2, '0');
+      const secs = (remainingSeconds % 60).toString().padStart(2, '0');
+      document.getElementById('timer-display').textContent = `${mins}:${secs}`;
+      const pct = (remainingSeconds / totalSeconds) * 100;
+      document.getElementById('timer-progress').style.width = `${pct}%`;
+    }
+
+    function setTimerMode(mins, modeName) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      currentModeName = modeName;
+      totalSeconds = mins * 60;
+      remainingSeconds = totalSeconds;
+      document.getElementById('timer-start-btn').textContent = `Start ${modeName}`;
+      document.getElementById('timer-status').textContent = `${modeName} session ready`;
+
+      ['mode-focus', 'mode-short', 'mode-long'].forEach(id => {
+        document.getElementById(id).className = 'py-1.5 rounded-lg text-slate-300 hover:bg-white/10 transition';
+      });
+      const activeId = mins === 25 ? 'mode-focus' : mins === 5 ? 'mode-short' : 'mode-long';
+      document.getElementById(activeId).className = 'py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold transition';
+      updateTimerUI();
+    }
+
+    function playChime() {
+      initAudio();
+      [523.25, 659.25, 783.99].forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        g.gain.setValueAtTime(0.15, audioCtx.currentTime + i * 0.18);
+        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.18 + 1.2);
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + i * 0.18);
+        osc.stop(audioCtx.currentTime + i * 0.18 + 1.2);
+      });
+    }
+
+    function toggleTimer() {
+      const btn = document.getElementById('timer-start-btn');
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        btn.textContent = 'Resume';
+        document.getElementById('timer-status').textContent = 'Paused — sip some cocoa ☕';
+      } else {
+        btn.textContent = 'Pause';
+        document.getElementById('timer-status').textContent = `${currentModeName} in progress...`;
+        timerInterval = setInterval(() => {
+          if (remainingSeconds > 0) {
+            remainingSeconds--;
+            updateTimerUI();
+          } else {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            playChime();
+            if (currentModeName === 'Focus') {
+              completedSessions++;
+              document.getElementById('session-counter').textContent = `Sessions: ${completedSessions}`;
+            }
+            document.getElementById('timer-status').textContent = 'Time is up! Great job ✨';
+            btn.textContent = 'Start Again';
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      remainingSeconds = totalSeconds;
+      document.getElementById('timer-start-btn').textContent = `Start ${currentModeName}`;
+      document.getElementById('timer-status').textContent = 'Reset and ready';
+      updateTimerUI();
+    }
+
+    /* =========================================
+       4. HOMEWORK CHECKLIST (LOCALSTORAGE)
+       ========================================= */
+    let tasks = JSON.parse(localStorage.getItem('lofidesk_tasks') || '[]');
+
+    function saveTasks() {
+      localStorage.setItem('lofidesk_tasks', JSON.stringify(tasks));
+      renderTasks();
+    }
+
+    function addTask(e) {
+      e.preventDefault();
+      const input = document.getElementById('task-input');
+      const subject = document.getElementById('task-subject').value;
+      if (!input.value.trim()) return;
+      tasks.push({ id: Date.now(), subject, text: input.value.trim(), done: false });
+      input.value = '';
+      saveTasks();
+    }
+
+    function toggleTask(id) {
+      tasks = tasks.map(t => t.id === id ? { ...t, done: !t.done } : t);
+      saveTasks();
+    }
+
+    function deleteTask(id) {
+      tasks = tasks.filter(t => t.id !== id);
+      saveTasks();
+    }
+
+    function renderTasks() {
+      const list = document.getElementById('task-list');
+      const doneCount = tasks.filter(t => t.done).length;
+      document.getElementById('task-count').textContent = `${doneCount}/${tasks.length} done`;
+
+      if (tasks.length === 0) {
+        list.innerHTML = `<li class="text-slate-400 text-center py-4">No assignments yet — add one above!</li>`;
+        return;
+      }
+
+      list.innerHTML = tasks.map(t => `
+        <li class="flex items-center justify-between gap-2 bg-black/30 border border-white/10 rounded-xl px-3 py-2">
+          <label class="flex items-center gap-2.5 cursor-pointer flex-1">
+            <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTask(${t.id})" class="accent-amber-400 w-4 h-4 rounded">
+            <span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-200 font-semibold text-[10px]">${t.subject}</span>
+            <span class="${t.done ? 'line-through text-slate-400' : 'text-slate-100'}">${t.text}</span>
+          </label>
+          <button onclick="deleteTask(${t.id})" class="text-slate-400 hover:text-rose-400 px-1">✕</button>
+        </li>
+      `).join('');
+    }
+    renderTasks();
+
+    /* =========================================
+       5. GROUP PROJECT SPLITTER
+       ========================================= */
+    let lastGeneratedPlan = '';
+
+    function splitGroupProject() {
+      const name = document.getElementById('proj-name').value.trim() || 'Group Project';
+      const dueStr = document.getElementById('proj-due').value;
+      const members = document.getElementById('proj-members').value.split(',').map(s => s.trim()).filter(Boolean);
+      const projTasks = document.getElementById('proj-tasks').value.split(',').map(s => s.trim()).filter(Boolean);
+
+      if (members.length === 0 || projTasks.length === 0) {
+        document.getElementById('project-output').innerHTML = `<p class="text-amber-300">Please enter at least one team member and one task!</p>`;
+        return;
+      }
+
+      const today = new Date();
+      const dueDate = dueStr ? new Date(dueStr + 'T23:59:00') : new Date(today.getTime() + 7 * 86400000);
+      const totalMs = Math.max(dueDate - today, 86400000);
+
+      let planLines = [`📌 ${name} (Final Due: ${dueDate.toLocaleDateString()})`];
+      const cards = projTasks.map((task, idx) => {
+        const assignee = members[idx % members.length];
+        const ratio = (idx + 1) / projTasks.length;
+        const miniDate = new Date(today.getTime() + totalMs * ratio);
+        const dateLabel = miniDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        planLines.push(`• ${assignee}: ${task} (Target: ${dateLabel})`);
+        return `
+          <div class="flex items-center justify-between bg-black/30 border border-white/10 rounded-xl px-3 py-2">
+            <div>
+              <span class="font-bold text-amber-300">${assignee}</span>
+              <span class="text-slate-200"> → ${task}</span>
+            </div>
+            <span class="text-[11px] bg-white/10 px-2 py-0.5 rounded-full text-amber-100">Due ${dateLabel}</span>
+          </div>
+        `;
+      });
+
+      lastGeneratedPlan = planLines.join('\n');
+      document.getElementById('project-output').innerHTML = cards.join('');
+      document.getElementById('copy-plan-btn').classList.remove('hidden');
+    }
+
+    function copyProjectPlan() {
+      if (!lastGeneratedPlan) return;
+      navigator.clipboard.writeText(lastGeneratedPlan);
+      const btn = document.getElementById('copy-plan-btn');
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => { btn.textContent = '📋 Copy for Group Chat'; }, 1800);
+    }
+  </script>
+</body>
+</html>
