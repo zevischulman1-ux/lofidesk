@@ -12,7 +12,7 @@
     :root {
       --bg-gradient: linear-gradient(135deg, #162032 0%, #24344d 50%, #141a26 100%);
       --window-sky: linear-gradient(180deg, #090d16 0%, #17233b 65%, #283a59 100%);
-      --panel-bg: rgba(18, 24, 36, 0.76);
+      --panel-bg: rgba(18, 24, 36, 0.78);
       --accent: #f59e0b;
       --text-main: #f8fafc;
       --desk-color: #422b1d;
@@ -41,7 +41,6 @@
       transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
-    /* Custom Range Sliders */
     input[type="range"] {
       -webkit-appearance: none;
       background: rgba(255, 255, 255, 0.16);
@@ -63,11 +62,10 @@
       transform: scale(1.2);
     }
 
-    /* Cozy Steam Animation */
     @keyframes riseSteam {
       0% { transform: translateY(0) scale(0.8); opacity: 0; }
       40% { opacity: 0.8; }
-      100% { transform: translateY(-44px) scale(1.4) translateX(8px); opacity: 0; }
+      100% { transform: translateY(-40px) scale(1.3) translateX(6px); opacity: 0; }
     }
     .steam-puff {
       animation: riseSteam 3s infinite ease-in-out;
@@ -75,7 +73,6 @@
     .steam-puff:nth-child(2) { animation-delay: 1s; }
     .steam-puff:nth-child(3) { animation-delay: 2s; }
 
-    /* Cat Animations */
     @keyframes tailWag {
       0%, 100% { transform: rotate(-10deg); }
       50% { transform: rotate(15deg); }
@@ -96,24 +93,23 @@
 
     @keyframes happyBounce {
       0%, 100% { transform: translateY(0) scale(1); }
-      35% { transform: translateY(-18px) scale(1.06); }
+      35% { transform: translateY(-16px) scale(1.05); }
       70% { transform: translateY(-4px) scale(0.98); }
     }
     .cat-happy {
-      animation: happyBounce 0.65s ease;
+      animation: happyBounce 0.6s ease;
     }
 
     @keyframes floatHeart {
       0% { transform: translateY(0) scale(0.7); opacity: 1; }
-      100% { transform: translateY(-55px) scale(1.3); opacity: 0; }
+      100% { transform: translateY(-50px) scale(1.3); opacity: 0; }
     }
     .floating-heart {
       position: absolute;
-      animation: floatHeart 1.5s forwards ease-out;
+      animation: floatHeart 1.4s forwards ease-out;
       pointer-events: none;
     }
 
-    /* Zen Mode */
     body.zen-active .ui-dashboard {
       opacity: 0;
       pointer-events: none;
@@ -125,23 +121,19 @@
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 999px; }
   </style>
 </head>
-<body class="relative select-none">
+<body class="relative select-none pb-12">
 
   <!-- Full-Screen Cozy Room Background & Window Scene -->
   <div id="room-scene" class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-    <!-- Warm Lamp Glow -->
     <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[520px] rounded-full blur-3xl opacity-30" style="background: radial-gradient(circle, #f59e0b 0%, transparent 70%);"></div>
 
-    <!-- Cozy Window Frame -->
-    <div class="absolute top-6 left-1/2 -translate-x-1/2 w-[94%] max-w-5xl h-[60vh] rounded-3xl border-[12px] border-[#2c1e16] shadow-2xl overflow-hidden" style="background: var(--window-sky);">
-      <!-- Moon & Twinkling Stars -->
+    <div class="absolute top-4 left-1/2 -translate-x-1/2 w-[94%] max-w-5xl h-[56vh] rounded-3xl border-[12px] border-[#2c1e16] shadow-2xl overflow-hidden" style="background: var(--window-sky);">
       <div class="absolute top-8 right-12 w-14 h-14 rounded-full bg-amber-100/90 shadow-[0_0_35px_rgba(254,243,199,0.7)]"></div>
       <div class="absolute top-12 left-16 w-1.5 h-1.5 bg-white rounded-full opacity-75 animate-pulse"></div>
       <div class="absolute top-24 left-1/3 w-1 h-1 bg-white rounded-full opacity-60"></div>
       <div class="absolute top-10 left-1/2 w-1.5 h-1.5 bg-amber-200 rounded-full opacity-80 animate-pulse"></div>
       <div class="absolute top-28 right-1/3 w-1 h-1 bg-white rounded-full opacity-70"></div>
 
-      <!-- Distant Snowy Hills & Pine Trees -->
       <svg class="absolute bottom-0 left-0 w-full h-36 opacity-85" viewBox="0 0 800 150" preserveAspectRatio="none">
         <path d="M0,150 L0,95 Q160,55 340,100 T680,85 L800,95 L800,150 Z" fill="#1e293b"/>
         <path d="M0,150 L0,115 Q240,80 480,115 T800,105 L800,150 Z" fill="#334155"/>
@@ -151,14 +143,11 @@
         <polygon points="680,112 695,70 710,112" fill="#0f172a"/>
       </svg>
 
-      <!-- Weather Canvas (Falling Snow & Window Rain) -->
       <canvas id="weather-canvas" class="absolute inset-0 w-full h-full"></canvas>
 
-      <!-- Window Panes Crossbars -->
       <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-3 bg-[#2c1e16]/90"></div>
       <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-3 bg-[#2c1e16]/90"></div>
 
-      <!-- String Fairy Lights -->
       <svg class="absolute top-0 left-0 w-full h-16" viewBox="0 0 800 60" preserveAspectRatio="none">
         <path d="M0,5 Q200,45 400,10 Q600,45 800,5" fill="none" stroke="#1c1917" stroke-width="2"/>
         <circle cx="80" cy="21" r="4" fill="#fde047" class="animate-pulse"/>
@@ -172,99 +161,72 @@
       </svg>
     </div>
 
-    <!-- Wooden Study Desk Surface (Where Cat & Hot Cocoa Sit Together!) -->
-    <div class="absolute bottom-0 inset-x-0 h-[35vh] border-t-[10px] border-[#7c563d] shadow-[0_-10px_30px_rgba(0,0,0,0.5)]" style="background: linear-gradient(180deg, var(--desk-top) 0%, var(--desk-color) 100%);">
-      <!-- Subtle Wood Grain Lines -->
+    <!-- Wooden Study Desk Surface -->
+    <div class="absolute bottom-0 inset-x-0 h-[38vh] border-t-[10px] border-[#7c563d] shadow-[0_-10px_30px_rgba(0,0,0,0.6)]" style="background: linear-gradient(180deg, var(--desk-top) 0%, var(--desk-color) 100%);">
       <div class="w-full h-full opacity-15" style="background-image: repeating-linear-gradient(0deg, transparent, transparent 22px, #000 23px, transparent 24px);"></div>
 
-      <!-- Desk Props Container (Interactive) -->
       <div class="relative max-w-5xl mx-auto h-full pointer-events-auto">
+        <div class="absolute top-3 right-6 sm:right-16 flex items-end gap-5 sm:gap-8">
 
-        <!-- Cozy Desk Cluster: Hot Cocoa Mug + Big Cat Sitting Together on the Desk -->
-        <div class="absolute top-2 right-6 sm:right-14 flex items-end gap-4 sm:gap-7">
-
-          <!-- Steaming Mug of Hot Chocolate on the Desk -->
-          <div id="hot-cocoa-prop" onclick="sipCocoa()" title="Click to sip warm hot chocolate!" class="relative cursor-pointer group transition-transform hover:scale-105 mb-2">
-            <!-- Coaster -->
+          <!-- Hot Cocoa Mug -->
+          <div id="hot-cocoa-prop" onclick="sipCocoa()" title="Click to sip warm hot chocolate!" class="relative cursor-pointer group transition-transform hover:scale-105 mb-3">
             <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-24 h-4 rounded-full bg-[#2c1a12] shadow-md"></div>
-            <!-- Rising Steam -->
-            <div class="flex justify-center gap-2 mb-1 h-9">
+            <div class="flex justify-center gap-2 mb-1 h-8">
               <div class="steam-puff w-2.5 h-6 rounded-full bg-white/45 blur-[2px]"></div>
               <div class="steam-puff w-3 h-7 rounded-full bg-white/55 blur-[2px]"></div>
               <div class="steam-puff w-2.5 h-6 rounded-full bg-white/45 blur-[2px]"></div>
             </div>
-            <!-- Larger Mug SVG -->
-            <svg width="96" height="86" viewBox="0 0 80 72" class="relative z-10 drop-shadow-lg">
-              <!-- Handle -->
+            <svg width="90" height="80" viewBox="0 0 80 72" class="relative z-10 drop-shadow-lg">
               <path d="M58,24 C75,24 75,52 58,52" fill="none" stroke="#e11d48" stroke-width="7" stroke-linecap="round"/>
-              <!-- Mug Body -->
               <rect x="14" y="16" width="46" height="46" rx="10" fill="#f43f5e"/>
               <rect x="14" y="16" width="46" height="10" rx="5" fill="#fda4af"/>
-              <!-- Hot Cocoa & Mini Marshmallows -->
               <ellipse cx="37" cy="21" rx="19" ry="4.5" fill="#451a03"/>
               <rect x="25" y="18" width="7" height="5" rx="2" fill="#fffbeb"/>
               <rect x="35" y="17" width="8" height="5" rx="2" fill="#ffffff"/>
               <rect x="44" y="19" width="6" height="4" rx="2" fill="#fffbeb"/>
-              <!-- Cozy Heart on Mug -->
               <path d="M37,46 C37,46 27,39 27,33 C27,30 30,28 33,28 C35,28 37,30 37,30 C37,30 39,28 41,28 C44,28 47,30 47,33 C47,39 37,46 37,46 Z" fill="#ffe4e6"/>
             </svg>
-            <span id="cocoa-toast" class="opacity-0 group-hover:opacity-100 transition-opacity absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs bg-black/80 px-2.5 py-1 rounded-full text-amber-200 font-semibold">Sip Cocoa ☕</span>
+            <span id="cocoa-toast" class="opacity-0 group-hover:opacity-100 transition-opacity absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs bg-black/80 px-2 py-0.5 rounded-full text-amber-200 font-semibold">Sip Cocoa ☕</span>
           </div>
 
-          <!-- BIG Cat Companion Sitting Right on the Desk -->
+          <!-- Cat Companion -->
           <div id="cat-prop" class="relative flex flex-col items-center">
-            <!-- Floating Hearts & Treat Messages -->
             <div id="cat-hearts" class="relative w-full h-0 z-20"></div>
 
-            <!-- Cat Name Badge + Treat Button -->
-            <div class="mb-1 flex items-center gap-1.5 bg-black/70 backdrop-blur-md border border-white/15 px-3 py-1 rounded-full shadow-lg z-20">
+            <div class="mb-1 flex items-center gap-1.5 bg-black/75 backdrop-blur-md border border-white/15 px-3 py-1 rounded-full shadow-lg z-20">
               <span id="cat-name-tag" class="text-xs font-bold text-amber-300">Mochi</span>
               <button onclick="feedCatTreat()" id="feed-treat-btn" class="ml-1 px-2 py-0.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[11px] transition flex items-center gap-1 shadow" title="Complete assignments to earn treats!">
                 🐟 <span id="treat-count">1</span>
               </button>
             </div>
 
-            <!-- Larger Cat SVG (165x155) -->
             <div onclick="petCat()" title="Click to pet!" class="cursor-pointer group transition-transform hover:scale-105">
-              <!-- Desk Shadow under Cat -->
               <div class="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-5 rounded-full bg-black/35 blur-[2px]"></div>
 
               <svg id="cat-svg" width="165" height="155" viewBox="0 0 130 125" class="relative z-10 drop-shadow-xl">
-                <!-- Wagging Tail -->
                 <path class="cat-tail" d="M28,102 Q4,82 14,54 Q19,44 26,52 Q20,76 35,96" fill="#f97316" id="cat-tail-path"/>
-                <!-- Cat Body -->
                 <ellipse cx="66" cy="90" rx="34" ry="27" fill="#f97316" id="cat-body"/>
-                <!-- Belly Patch -->
                 <ellipse cx="66" cy="93" rx="18" ry="18" fill="#ffffff" opacity="0" id="cat-belly"/>
-                <!-- Cat Head -->
                 <circle cx="66" cy="50" r="26" fill="#f97316" id="cat-head"/>
-                <!-- Ears -->
                 <polygon points="43,36 40,11 60,27" fill="#f97316" id="cat-ear-l"/>
                 <polygon points="89,36 92,11 72,27" fill="#f97316" id="cat-ear-r"/>
                 <polygon points="46,32 45,17 56,27" fill="#fed7aa" id="cat-ear-in-l"/>
                 <polygon points="86,32 87,17 76,27" fill="#fed7aa" id="cat-ear-in-r"/>
-                <!-- Siamese Face Mask (toggled via JS) -->
                 <ellipse cx="66" cy="54" rx="15" ry="11" fill="#451a03" opacity="0" id="cat-siamese-mask"/>
-                <!-- Calico Patches (toggled via JS) -->
                 <circle cx="52" cy="40" r="10" fill="#1e293b" opacity="0" id="cat-patch-1"/>
                 <circle cx="80" cy="84" r="11" fill="#f97316" opacity="0" id="cat-patch-2"/>
-                <!-- Eyes -->
                 <ellipse class="cat-eye" cx="56" cy="49" rx="3.4" ry="4.4" fill="#1e293b" id="cat-eye-l"/>
                 <ellipse class="cat-eye" cx="76" cy="49" rx="3.4" ry="4.4" fill="#1e293b" id="cat-eye-r"/>
-                <!-- Eye Shine -->
                 <circle cx="55" cy="47.5" r="1.2" fill="#ffffff"/>
                 <circle cx="75" cy="47.5" r="1.2" fill="#ffffff"/>
-                <!-- Blush & Nose -->
                 <ellipse cx="48" cy="55" rx="4" ry="2.2" fill="#fb7185" opacity="0.65"/>
                 <ellipse cx="84" cy="55" rx="4" ry="2.2" fill="#fb7185" opacity="0.65"/>
                 <polygon points="63.5,54 68.5,54 66,57.5" fill="#fb7185"/>
                 <path d="M61,59 Q66,63 66,58 Q66,63 71,59" fill="none" stroke="#1e293b" stroke-width="1.8" stroke-linecap="round" id="cat-mouth"/>
-                <!-- Whiskers -->
                 <line x1="34" y1="52" x2="46" y2="54" stroke="#cbd5e1" stroke-width="1.2" opacity="0.7"/>
                 <line x1="34" y1="57" x2="46" y2="57" stroke="#cbd5e1" stroke-width="1.2" opacity="0.7"/>
                 <line x1="86" y1="54" x2="98" y2="52" stroke="#cbd5e1" stroke-width="1.2" opacity="0.7"/>
                 <line x1="86" y1="57" x2="98" y2="57" stroke="#cbd5e1" stroke-width="1.2" opacity="0.7"/>
-                <!-- Paws resting on desk -->
                 <ellipse cx="52" cy="113" rx="9" ry="5.5" fill="#fff7ed" id="cat-paw-l"/>
                 <ellipse cx="80" cy="113" rx="9" ry="5.5" fill="#fff7ed" id="cat-paw-r"/>
               </svg>
@@ -286,14 +248,14 @@
       </div>
     </div>
 
-    <!-- Scene, Weather Audio & Cat Controls -->
+    <!-- Controls -->
     <div class="glass-panel px-3 py-2 rounded-2xl flex flex-wrap items-center gap-1.5 text-xs font-semibold">
       <button onclick="toggleProp('snow')" id="btn-snow" class="px-2.5 py-1.5 rounded-xl bg-amber-500/25 text-amber-200 border border-amber-400/40 transition hover:bg-amber-500/40">❄️ Snow: ON</button>
       <button onclick="toggleProp('rain')" id="btn-rain" class="px-2.5 py-1.5 rounded-xl bg-white/5 text-slate-300 border border-white/10 transition hover:bg-white/15">🌧️ Rain: OFF</button>
-      <button onclick="toggleWeatherMute()" id="btn-weather-mute" class="px-2.5 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 transition hover:bg-emerald-500/35" title="Mute or unmute automatic Snow/Rain weather sounds">🔊 Weather Sound</button>
+      <button onclick="toggleWeatherMute()" id="btn-weather-mute" class="px-2.5 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 transition hover:bg-emerald-500/35">🔊 Weather Sound</button>
       <button onclick="toggleProp('cocoa')" id="btn-cocoa" class="px-2.5 py-1.5 rounded-xl bg-amber-500/25 text-amber-200 border border-amber-400/40 transition hover:bg-amber-500/40">☕ Cocoa: ON</button>
       <button onclick="toggleProp('cat')" id="btn-cat" class="px-2.5 py-1.5 rounded-xl bg-amber-500/25 text-amber-200 border border-amber-400/40 transition hover:bg-amber-500/40">🐱 Cat: ON</button>
-      <button onclick="cycleCatBreed()" id="btn-breed" class="px-2.5 py-1.5 rounded-xl bg-white/10 text-amber-100 hover:bg-white/20 transition" title="Switch Cat">🐾 Mochi (Tabby)</button>
+      <button onclick="cycleCatBreed()" id="btn-breed" class="px-2.5 py-1.5 rounded-xl bg-white/10 text-amber-100 hover:bg-white/20 transition">🐾 Mochi (Tabby)</button>
       <select onchange="changeTheme(this.value)" class="bg-slate-900/80 text-slate-200 border border-white/15 rounded-xl px-2 py-1.5 outline-none cursor-pointer">
         <option value="winter">🏔️ Snowy Cabin</option>
         <option value="cafe">☕ Lo-Fi Cafe</option>
@@ -311,17 +273,14 @@
   <!-- Main Study Dashboard Grid -->
   <main class="ui-dashboard relative z-10 max-w-6xl mx-auto px-4 py-4 grid grid-cols-1 lg:grid-cols-12 gap-4">
 
-    <!-- Left Column: Custom Focus Timer & Homework Checklist (5 cols) -->
+    <!-- Left Column: Timer & Checklist -->
     <div class="lg:col-span-5 flex flex-col gap-4">
-
-      <!-- Customizable Focus Timer -->
       <section class="glass-panel rounded-3xl p-4">
         <div class="flex items-center justify-between mb-2.5">
           <h2 class="text-base font-bold text-amber-300 flex items-center gap-2">⏱️ Focus Timer</h2>
           <span id="session-counter" class="text-xs bg-white/10 px-2.5 py-0.5 rounded-full text-slate-300">Sessions: 0</span>
         </div>
 
-        <!-- Preset Mode Tabs -->
         <div class="grid grid-cols-4 gap-1 bg-black/30 p-1 rounded-xl mb-3 text-[11px] font-semibold">
           <button onclick="setTimerMode(25, 'Focus')" id="mode-25" class="py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold transition">25m</button>
           <button onclick="setTimerMode(45, 'Deep Study')" id="mode-45" class="py-1.5 rounded-lg text-slate-300 hover:bg-white/10 transition">45m</button>
@@ -329,33 +288,28 @@
           <button onclick="setTimerMode(15, 'Long Break')" id="mode-15" class="py-1.5 rounded-lg text-slate-300 hover:bg-white/10 transition">15m Break</button>
         </div>
 
-        <!-- Custom Minutes Setter -->
         <div class="flex items-center gap-2 mb-2 text-xs">
           <span class="text-slate-300">Custom:</span>
           <input id="custom-mins-input" type="number" min="1" max="180" placeholder="Mins" class="w-20 bg-black/40 border border-white/15 rounded-lg px-2.5 py-1 text-white outline-none focus:border-amber-400">
           <button onclick="applyCustomTimer()" class="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-amber-200 font-semibold transition">Set Time</button>
         </div>
 
-        <!-- Timer Display -->
         <div class="text-center my-2">
           <div id="timer-display" class="font-display text-5xl font-bold tracking-wider text-white drop-shadow">25:00</div>
           <p id="timer-status" class="text-xs text-amber-200/80 mt-0.5">Ready to study cozy</p>
         </div>
 
-        <!-- Progress Bar -->
         <div class="w-full h-2 bg-black/40 rounded-full overflow-hidden mb-3">
           <div id="timer-progress" class="h-full bg-amber-400 transition-all duration-500" style="width: 100%;"></div>
         </div>
 
-        <!-- Timer Controls -->
         <div class="flex gap-2">
           <button onclick="toggleTimer()" id="timer-start-btn" class="flex-1 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow-lg">Start Focus</button>
-          <button onclick="adjustTimerMinutes(5)" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-amber-200 font-semibold text-xs transition" title="Add 5 minutes">+5m</button>
+          <button onclick="adjustTimerMinutes(5)" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-amber-200 font-semibold text-xs transition">+5m</button>
           <button onclick="resetTimer()" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 font-semibold text-xs transition">Reset</button>
         </div>
       </section>
 
-      <!-- Homework & Assignment Checklist (Earns Cat Treats!) -->
       <section class="glass-panel rounded-3xl p-4 flex-1 flex flex-col">
         <div class="flex items-center justify-between mb-2">
           <div>
@@ -382,15 +336,13 @@
       </section>
     </div>
 
-    <!-- Right Column: Upgraded Sound Mixer & Group Project Splitter (7 cols) -->
+    <!-- Right Column: Mixer & Project Splitter -->
     <div class="lg:col-span-7 flex flex-col gap-4">
-
-      <!-- Upgraded Web Audio Soundscape Mixer -->
       <section class="glass-panel rounded-3xl p-4">
         <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
           <div>
             <h2 class="text-base font-bold text-amber-300 flex items-center gap-2">🎧 Cozy Soundscape Mixer</h2>
-            <p class="text-[11px] text-slate-300">Upgraded multi-layered synth audio • Snow & Rain sync automatically</p>
+            <p class="text-[11px] text-slate-300">Upgraded Rhodes Piano, Singing Bowls & Vinyl Atmosphere</p>
           </div>
           <div class="flex gap-1.5">
             <button onclick="applyCozyPreset()" class="px-2.5 py-1.5 rounded-xl bg-amber-500/25 hover:bg-amber-500/40 border border-amber-400/40 text-amber-200 text-xs font-bold transition">✨ Cozy Mix</button>
@@ -401,7 +353,6 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="sound-sliders"></div>
       </section>
 
-      <!-- Group Project Task Splitter -->
       <section class="glass-panel rounded-3xl p-4 flex-1">
         <div class="flex items-center justify-between mb-2.5">
           <div>
@@ -414,7 +365,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-2.5 text-xs">
           <div>
             <label class="block text-slate-300 mb-1">Project Name</label>
-            <input id="proj-name" type="text" placeholder="e.g., AP Bio Ecosystem Slides" class="w-full bg-black/40 border border-white/15 rounded-xl px-3 py-1.5 text-white outline-none focus:border-amber-400">
+            <input id="proj-name" type="text" placeholder="e.g., AP Bio Slides" class="w-full bg-black/40 border border-white/15 rounded-xl px-3 py-1.5 text-white outline-none focus:border-amber-400">
           </div>
           <div>
             <label class="block text-slate-300 mb-1">Final Due Date</label>
@@ -426,7 +377,7 @@
           </div>
           <div>
             <label class="block text-slate-300 mb-1">Tasks / Slides (comma-separated)</label>
-            <input id="proj-tasks" type="text" placeholder="Intro, Research, Data Chart, Design" class="w-full bg-black/40 border border-white/15 rounded-xl px-3 py-1.5 text-white outline-none focus:border-amber-400">
+            <input id="proj-tasks" type="text" placeholder="Intro, Research, Data, Design" class="w-full bg-black/40 border border-white/15 rounded-xl px-3 py-1.5 text-white outline-none focus:border-amber-400">
           </div>
         </div>
 
@@ -434,14 +385,10 @@
 
         <div id="project-output" class="space-y-1.5 max-h-36 overflow-y-auto text-xs"></div>
       </section>
-
     </div>
   </main>
 
   <script>
-    /* =========================================
-       1. LIVE CLOCK & ROOM THEMES
-       ========================================= */
     function updateLiveClock() {
       const now = new Date();
       document.getElementById('live-clock').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -489,9 +436,6 @@
       document.documentElement.style.setProperty('--accent', t.accent);
     }
 
-    /* =========================================
-       2. 7 NAMED CATS, TREATS & DESK PROPS
-       ========================================= */
     const catBreeds = [
       { name: 'Mochi', breed: 'Tabby', main: '#f97316', earIn: '#fed7aa', patch1: 0, patch2: 0, belly: 0, mask: 0, paws: '#fff7ed', eyes: '#1e293b' },
       { name: 'Patches', breed: 'Calico', main: '#fffbeb', earIn: '#fecdd3', patch1: 1, patch2: 1, belly: 0, mask: 0, paws: '#f97316', eyes: '#1e293b' },
@@ -574,17 +518,13 @@
       }, 1800);
     }
 
-    /* =========================================
-       3. WEATHER PROPS + SYNCED WEATHER SOUND
-       ========================================= */
     const propState = { snow: true, rain: false, cocoa: true, cat: true };
     let weatherSoundMuted = false;
 
     function syncWeatherAudio() {
-      if (!audioCtx) return; // Will start as soon as user clicks any toggle or slider
+      if (!audioCtx) return;
       const snowTarget = (propState.snow && !weatherSoundMuted) ? 32 : 0;
       const rainTarget = (propState.rain && !weatherSoundMuted) ? 45 : 0;
-
       setSoundVolume('wind', snowTarget, true);
       setSoundVolume('rain', rainTarget, true);
     }
@@ -628,7 +568,6 @@
       document.getElementById('zen-label').textContent = zenMode ? 'Show Desk' : 'Zen View';
     }
 
-    // Weather Particle Animation
     const canvas = document.getElementById('weather-canvas');
     const ctx = canvas.getContext('2d');
     let snowflakes = [];
@@ -661,7 +600,6 @@
 
     function animateWeather() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       if (propState.snow) {
         ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
         snowflakes.forEach(s => {
@@ -673,7 +611,6 @@
           if (s.y > canvas.height) { s.y = -5; s.x = Math.random() * canvas.width; }
         });
       }
-
       if (propState.rain) {
         ctx.strokeStyle = 'rgba(186, 230, 253, 0.5)';
         ctx.lineWidth = 1.4;
@@ -687,29 +624,25 @@
           if (r.y > canvas.height) { r.y = -15; r.x = Math.random() * canvas.width; }
         });
       }
-
       requestAnimationFrame(animateWeather);
     }
     animateWeather();
 
-    /* =========================================
-       4. UPGRADED WEB AUDIO SOUNDSCAPE ENGINE
-       ========================================= */
     let audioCtx = null;
     const soundChannels = [
-      { id: 'lofi', label: '🎹 Warm Lo-Fi Electric Piano', vol: 0 },
-      { id: 'rain', label: '🌧️ Window Raindrops (Auto-Sync)', vol: 0 },
-      { id: 'wind', label: '❄️ Winter Snow Breeze (Auto-Sync)', vol: 0 },
+      { id: 'rhodes', label: '🎹 Warm Lo-Fi Rhodes Piano', vol: 0 },
+      { id: 'bowls', label: '🔔 Tibetan Singing Bowls', vol: 0 },
+      { id: 'vinyl', label: '📻 Vintage Vinyl Crackle', vol: 0 },
+      { id: 'rain', label: '🌧️ Window Rain (Auto-Sync)', vol: 0 },
+      { id: 'wind', label: '❄️ Winter Breeze (Auto-Sync)', vol: 0 },
       { id: 'fire', label: '🔥 Cozy Hearth Fireplace', vol: 0 },
-      { id: 'purr', label: '🐱 Deep Cat Purring', vol: 0 },
-      { id: 'cafe', label: '☕ Quiet Coffeehouse', vol: 0 }
+      { id: 'purr', label: '🐱 Deep Cat Purring', vol: 0 }
     ];
     const activeNodes = {};
 
     function initAudio() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        // Start snow breeze softly on first user interaction since snow starts ON
         setTimeout(() => syncWeatherAudio(), 50);
       }
       if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -724,7 +657,6 @@
       for (let i = 0; i < bufferSize; i++) {
         const white = Math.random() * 2 - 1;
         if (type === 'pink') {
-          // Paul Kellet's warm pink noise filter
           b0 = 0.99886 * b0 + white * 0.0555179;
           b1 = 0.99332 * b1 + white * 0.0750759;
           b2 = 0.96900 * b2 + white * 0.1538520;
@@ -736,8 +668,8 @@
         } else if (type === 'brown') {
           b0 = (b0 + (0.02 * white)) / 1.02;
           data[i] = b0 * 2.8;
-        } else if (type === 'crackle') {
-          data[i] = Math.random() > 0.9975 ? (Math.random() * 2 - 1) * 0.85 : white * 0.008;
+        } else if (type === 'vinyl') {
+          data[i] = Math.random() > 0.9985 ? (Math.random() * 2 - 1) * 0.95 : white * 0.005;
         } else {
           data[i] = white;
         }
@@ -753,7 +685,6 @@
       masterGain.connect(audioCtx.destination);
 
       if (id === 'rain') {
-        // Dual-layer rain: soft patter + low roof resonance
         const src1 = audioCtx.createBufferSource();
         src1.buffer = createNoiseBuffer('pink');
         src1.loop = true;
@@ -768,7 +699,6 @@
         lp.connect(masterGain);
         src1.start();
       } else if (id === 'wind') {
-        // Gentle whistling winter wind with slow LFO sweep
         const src = audioCtx.createBufferSource();
         src.buffer = createNoiseBuffer('pink');
         src.loop = true;
@@ -776,20 +706,17 @@
         filter.type = 'bandpass';
         filter.frequency.value = 340;
         filter.Q.value = 5.5;
-
         const lfo = audioCtx.createOscillator();
         lfo.frequency.value = 0.14;
         const lfoGain = audioCtx.createGain();
         lfoGain.gain.value = 110;
         lfo.connect(lfoGain);
         lfoGain.connect(filter.frequency);
-
         src.connect(filter);
         filter.connect(masterGain);
         src.start();
         lfo.start();
       } else if (id === 'fire') {
-        // Warm low roar + wood pops
         const rumble = audioCtx.createBufferSource();
         rumble.buffer = createNoiseBuffer('brown');
         rumble.loop = true;
@@ -799,9 +726,8 @@
         rumble.connect(rFilter);
         rFilter.connect(masterGain);
         rumble.start();
-
         const crackle = audioCtx.createBufferSource();
-        crackle.buffer = createNoiseBuffer('crackle');
+        crackle.buffer = createNoiseBuffer('vinyl');
         crackle.loop = true;
         const cFilter = audioCtx.createBiquadFilter();
         cFilter.type = 'bandpass';
@@ -809,15 +735,23 @@
         crackle.connect(cFilter);
         cFilter.connect(masterGain);
         crackle.start();
+      } else if (id === 'vinyl') {
+        const src = audioCtx.createBufferSource();
+        src.buffer = createNoiseBuffer('vinyl');
+        src.loop = true;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 2400;
+        src.connect(filter);
+        filter.connect(masterGain);
+        src.start();
       } else if (id === 'purr') {
-        // Rhythmic breathing purr oscillator
         const osc = audioCtx.createOscillator();
         osc.type = 'sawtooth';
         osc.frequency.value = 26;
         const filter = audioCtx.createBiquadFilter();
         filter.type = 'lowpass';
         filter.frequency.value = 120;
-
         const breathGain = audioCtx.createGain();
         breathGain.gain.value = 0.5;
         const lfo = audioCtx.createOscillator();
@@ -826,55 +760,83 @@
         lfoDepth.gain.value = 0.4;
         lfo.connect(lfoDepth);
         lfoDepth.connect(breathGain.gain);
-
         osc.connect(filter);
         filter.connect(breathGain);
         breathGain.connect(masterGain);
         osc.start();
         lfo.start();
-      } else if (id === 'cafe') {
-        const src = audioCtx.createBufferSource();
-        src.buffer = createNoiseBuffer('brown');
-        src.loop = true;
-        const filter = audioCtx.createBiquadFilter();
-        filter.type = 'bandpass';
-        filter.frequency.value = 580;
-        filter.Q.value = 1.2;
-        src.connect(filter);
-        filter.connect(masterGain);
-        src.start();
-      } else if (id === 'lofi') {
-        // 4-Chord Jazz Lo-Fi Rhodes Progression (Fmaj7 -> Em7 -> Dm7 -> Cmaj7)
+      } else if (id === 'bowls') {
+        // Tibetan Singing Bowl Harmonic Frequencies (Root C4 & G4 resonances)
+        const freqs = [261.63, 392.00, 523.25];
+        const bowlGain = audioCtx.createGain();
+        bowlGain.gain.value = 0.22;
+        const reverbFilter = audioCtx.createBiquadFilter();
+        reverbFilter.type = 'lowpass';
+        reverbFilter.frequency.value = 1200;
+        bowlGain.connect(reverbFilter);
+        reverbFilter.connect(masterGain);
+
+        freqs.forEach(f => {
+          const osc = audioCtx.createOscillator();
+          osc.type = 'sine';
+          osc.frequency.value = f;
+          
+          // Gentle pulsing swell imitating singing bowl rim strike
+          const gainNode = audioCtx.createGain();
+          gainNode.gain.value = 0.6;
+          const lfo = audioCtx.createOscillator();
+          lfo.frequency.value = 0.18;
+          const lfoG = audioCtx.createGain();
+          lfoG.gain.value = 0.4;
+          lfo.connect(lfoG);
+          lfoG.connect(gainNode.gain);
+
+          osc.connect(gainNode);
+          gainNode.connect(bowlGain);
+          osc.start();
+          lfo.start();
+        });
+      } else if (id === 'rhodes') {
+        // Lush Warm Lo-Fi Rhodes Electric Piano Progression (Fmaj7 -> Am7 -> Dm7 -> G7)
         const progression = [
           [174.61, 220.00, 261.63, 329.63],
-          [164.81, 196.00, 246.94, 293.66],
+          [220.00, 261.63, 329.63, 392.00],
           [146.83, 174.61, 220.00, 261.63],
-          [130.81, 164.81, 196.00, 246.94]
+          [196.00, 246.94, 293.66, 349.23]
         ];
         let chordIdx = 0;
         const padGain = audioCtx.createGain();
-        padGain.gain.value = 0.14;
+        padGain.gain.value = 0.16;
         const warmFilter = audioCtx.createBiquadFilter();
         warmFilter.type = 'lowpass';
-        warmFilter.frequency.value = 540;
+        warmFilter.frequency.value = 650;
         padGain.connect(warmFilter);
         warmFilter.connect(masterGain);
 
-        const voices = progression[0].map(freq => {
-          const osc = audioCtx.createOscillator();
-          osc.type = 'triangle';
-          osc.frequency.value = freq;
-          osc.connect(padGain);
-          osc.start();
-          return osc;
+        // Dual oscillators per voice for rich chorus/electric piano warmth
+        const voices = [];
+        progression[0].forEach(freq => {
+          const o1 = audioCtx.createOscillator();
+          o1.type = 'sine';
+          o1.frequency.value = freq;
+          o1.connect(padGain);
+          o1.start();
+
+          const o2 = audioCtx.createOscillator();
+          o2.type = 'triangle';
+          o2.frequency.value = freq * 1.002;
+          o2.connect(padGain);
+          o2.start();
+          voices.push([o1, o2]);
         });
 
         setInterval(() => {
           chordIdx = (chordIdx + 1) % progression.length;
-          voices.forEach((osc, i) => {
-            osc.frequency.setTargetAtTime(progression[chordIdx][i], audioCtx.currentTime, 0.35);
+          voices.forEach((pair, i) => {
+            pair[0].frequency.setTargetAtTime(progression[chordIdx][i], audioCtx.currentTime, 0.4);
+            pair[1].frequency.setTargetAtTime(progression[chordIdx][i] * 1.002, audioCtx.currentTime, 0.4);
           });
-        }, 3600);
+        }, 4000);
       }
 
       activeNodes[id] = masterGain;
@@ -938,7 +900,7 @@
     renderSliders();
 
     function applyCozyPreset() {
-      const preset = { lofi: 45, fire: 55, purr: 40, wind: propState.snow ? 32 : 0, rain: propState.rain ? 45 : 0, cafe: 0 };
+      const preset = { rhodes: 50, bowls: 40, vinyl: 35, fire: 45, purr: 35, wind: propState.snow ? 32 : 0, rain: propState.rain ? 45 : 0 };
       Object.entries(preset).forEach(([id, val]) => setSoundVolume(id, val, true));
     }
 
@@ -946,9 +908,6 @@
       soundChannels.forEach(ch => setSoundVolume(ch.id, 0, true));
     }
 
-    /* =========================================
-       5. CUSTOMIZABLE FOCUS TIMER
-       ========================================= */
     let totalSeconds = 25 * 60;
     let remainingSeconds = totalSeconds;
     let timerInterval = null;
@@ -1051,9 +1010,6 @@
       updateTimerUI();
     }
 
-    /* =========================================
-       6. HOMEWORK CHECKLIST -> EARNS CAT TREATS
-       ========================================= */
     let tasks = JSON.parse(localStorage.getItem('lofidesk_tasks') || '[]');
 
     function saveTasks() {
@@ -1116,9 +1072,6 @@
     }
     renderTasks();
 
-    /* =========================================
-       7. GROUP PROJECT SPLITTER
-       ========================================= */
     let lastGeneratedPlan = '';
 
     function splitGroupProject() {
